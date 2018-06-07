@@ -67,40 +67,18 @@ public class BannerView<T> extends RelativeLayout {
         initIndicator();
     }
 
+    /**
+     * 获取自定义属性
+     * @param context
+     * @param attrs
+     */
     private void readAttrs(Context context,AttributeSet attrs){
         TypedArray typedArray = context.obtainStyledAttributes(attrs,R.styleable.BannerView);
         isInfinity = typedArray.getBoolean(R.styleable.BannerView_infinity,false);
         isLoop = typedArray.getBoolean(R.styleable.BannerView_loop,false);
-        isNesting = typedArray.getBoolean(R.styleable.BannerView_nest,true);
+        isNesting = typedArray.getBoolean(R.styleable.BannerView_nest,false);
         delayMillis = typedArray.getInteger(R.styleable.BannerView_delayMillis,3000);
         typedArray.recycle();
-    }
-
-    private void initIndicator() {
-        if(indicator != null) {
-            indicator.attachView(this);
-            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    indicator.setCurrentItem(position % adapter.getRealCount());
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-
-                }
-            });
-        }
-    }
-
-    public void setIndicator(PagerIndicator indicator) {
-        this.indicator = indicator;
-        initIndicator();
     }
 
     /**
@@ -142,9 +120,57 @@ public class BannerView<T> extends RelativeLayout {
         startScroll();
     }
 
+    /**
+     * 配置指示器
+     */
+    private void initIndicator() {
+        if(indicator != null) {
+            indicator.attachView(this);
+            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    indicator.setCurrentItem(position % adapter.getRealCount());
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+        }
+    }
+
+    /**
+     * 设置点击事件
+     *
+     * @param onPageClickListener
+     */
+    public void setOnPageClickListener(OnPageClickListener onPageClickListener) {
+        adapter.setOnPageClickListener(onPageClickListener);
+    }
+
+    /**
+     * 设置指示器
+     * @param indicator
+     */
+    public void setIndicator(PagerIndicator indicator) {
+        this.indicator = indicator;
+        initIndicator();
+    }
+
+    /**
+     * 设置Banner展示左右两侧其余banner
+     * @param nesting
+     * @param margin
+     */
     public void setNesting(boolean nesting,int margin) {
         this.isNesting = nesting;
-        setClipChildren(isNesting);
+        setClipChildren(!isNesting);
         if(!isNesting) {
             MarginLayoutParams params = (MarginLayoutParams) viewPager.getLayoutParams();
             params.leftMargin = dpToPx(margin);
@@ -152,21 +178,38 @@ public class BannerView<T> extends RelativeLayout {
         }
     }
 
+    /**
+     * 设置ViewPager切换动画
+     * @param reverseDrawingOrder
+     * @param transformer
+     */
     public void setPageTransformer(boolean reverseDrawingOrder,
                                    @Nullable ViewPager.PageTransformer transformer) {
         viewPager.setPageTransformer(reverseDrawingOrder ,transformer);
     }
 
+    /**
+     * 开始自动滚动
+     */
     public void startScroll() {
+        handler.removeCallbacksAndMessages(null);
         if(isLoop) {
             handler.postDelayed(loopRunnable, delayMillis);
         }
     }
 
+    /**
+     * 暂停自动滚动
+     */
     public void stopScroll() {
         handler.removeCallbacksAndMessages(null);
     }
 
+    /**
+     * 设置数据源和View生成器
+     * @param data
+     * @param bannerViewHolder
+     */
     public void setData(List<T> data, BaseBannerViewHolder<T> bannerViewHolder) {
         this.data = data;
         adapter.setHolder(bannerViewHolder);
@@ -176,10 +219,11 @@ public class BannerView<T> extends RelativeLayout {
 
     public static class BannerAdapter<T> extends PagerAdapter {
 
-        private List<T> data;
-        private boolean notify = false;
-        private BaseBannerViewHolder<T> holder;
-        private boolean isInfinity;
+        private List<T> data;//数据源
+        private boolean notify = false;//手动更改了数据源标志位，解决notifyDataSetChanged不起作用的问题
+        private BaseBannerViewHolder<T> holder;//生成对应View并处理View事件
+        private boolean isInfinity;//是否允许无限轮播
+        private OnPageClickListener onPageClickListener;//item点击回调
 
         public BannerAdapter(Context context,boolean isInfinity) {
             this.isInfinity = isInfinity;
@@ -193,8 +237,22 @@ public class BannerView<T> extends RelativeLayout {
             return view;
         }
 
-        private View getView(ViewGroup container,int position) {
+        /**
+         * 生成对应的View
+         * @param container
+         * @param position
+         * @return
+         */
+        private View getView(ViewGroup container, final int position) {
             View view = holder.createView();
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(onPageClickListener != null) {
+                        onPageClickListener.onPageClick(position % getRealCount());
+                    }
+                }
+            });
             holder.bind(position % getRealCount(),data.get(position % getRealCount()));
             return view;
         }
@@ -204,6 +262,10 @@ public class BannerView<T> extends RelativeLayout {
             container.removeView((View)object);
         }
 
+        /**
+         * 无限模式返回Int最大值，否则返回真实个数
+         * @return
+         */
         @Override
         public int getCount() {
             if(isInfinity) {
@@ -213,15 +275,24 @@ public class BannerView<T> extends RelativeLayout {
             }
         }
 
+        /**
+         * 返回数据源真实个数
+         * @return
+         */
         public int getRealCount() {
             return data == null ? 0 : data.size();
         }
 
+        /**
+         * 获取初始化第一个item位置
+         * @return
+         */
         public int getFirstPosition() {
             if(getRealCount() == 0) {
                 throw new IllegalArgumentException();
             }
             if(isInfinity) {
+                //无限模式下从Int最大值中间开始，若从0开始则无法左滑
                 int center = Integer.MAX_VALUE/2;
                 center = center - center % getRealCount();
                 return center;
@@ -235,6 +306,10 @@ public class BannerView<T> extends RelativeLayout {
             return view == object;
         }
 
+        /**
+         * 更新数据源，设置刷新标志
+         * @param data
+         */
         public void setData(List<T> data) {
             this.data = data;
             this.notify = true;
@@ -242,6 +317,11 @@ public class BannerView<T> extends RelativeLayout {
             this.notify = false;
         }
 
+        /**
+         * 重写该方法以防止notifyDataSetChanged不生效
+         * @param object
+         * @return
+         */
         @Override
         public int getItemPosition(@NonNull Object object) {
             if(notify) {
@@ -253,6 +333,10 @@ public class BannerView<T> extends RelativeLayout {
 
         public void setHolder(BaseBannerViewHolder<T> holder) {
             this.holder = holder;
+        }
+
+        public void setOnPageClickListener(OnPageClickListener onPageClickListener) {
+            this.onPageClickListener = onPageClickListener;
         }
     }
 
