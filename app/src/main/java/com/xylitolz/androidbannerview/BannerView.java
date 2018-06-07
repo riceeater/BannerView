@@ -113,6 +113,7 @@ public class BannerView<T> extends RelativeLayout {
                 return false;
             }
         });
+        //若不设置，则画廊模式手动滑动会出问题，初始化时机的问题，存在滑动后新生成Page导致动画未设置
         viewPager.setOffscreenPageLimit(3);
 
         setNesting(isNesting,10);
