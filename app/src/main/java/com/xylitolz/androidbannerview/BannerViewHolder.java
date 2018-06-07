@@ -12,7 +12,7 @@ import android.widget.TextView;
  * @desc Banner子项帮助类
  * @date 2018-06-06 14:09
  */
-public class BannerViewHolder {
+public class BannerViewHolder implements BaseBannerViewHolder<String>{
 
     private Context context;
     private TextView tvBanner;

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BannerView">
+        <attr name="infinity" format="boolean"/>
+        <attr name="loop" format="boolean"/>
+        <attr name="nest" format="boolean"/>
+        <attr name="delayMillis" format="integer"/>
+    </declare-styleable>
+</resources>

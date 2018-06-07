@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
         data.add("Banner0");
         data.add("Banner1");
         data.add("Banner2");
-        bannerView.setData(data);
+        bannerView.setData(data,new BannerViewHolder(this));
+        bannerView.setNesting(false,20);
+        bannerView.setIndicator(new CirclePageIndicator(data.size()));
     }
 }
