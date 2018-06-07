@@ -40,4 +40,4 @@ protected void onCreate(Bundle savedInstanceState) {
     });
 }
 ```
-配合[文档](http://www.riceeater.info/articles/Android/View/AndroidBannerView/)食用，风味更佳~
+配合[文档](http://www.riceeater.info/articles/Android/View/BannerView/)食用，风味更佳~
