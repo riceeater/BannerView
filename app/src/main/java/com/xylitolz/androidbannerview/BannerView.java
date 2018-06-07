@@ -73,6 +73,7 @@ public class BannerView<T> extends RelativeLayout {
         isLoop = typedArray.getBoolean(R.styleable.BannerView_loop,false);
         isNesting = typedArray.getBoolean(R.styleable.BannerView_nest,true);
         delayMillis = typedArray.getInteger(R.styleable.BannerView_delayMillis,3000);
+        typedArray.recycle();
     }
 
     private void initIndicator() {
