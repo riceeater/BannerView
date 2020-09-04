@@ -1,6 +1,7 @@
 Android可自动滚动的广告图控件
 效果图：
-![](http://p6z0jdp7l.bkt.clouddn.com/view/BannerView.gif)
+![](
+https://riceeater.oss-cn-qingdao.aliyuncs.com/blog/%E6%97%A0%E9%99%90%E6%BB%9A%E5%8A%A8%E7%9A%84BannerView.gif)
 
 使用：
 
@@ -8,36 +9,32 @@ Android可自动滚动的广告图控件
 <com.xylitolz.androidbannerview.BannerView
         android:id="@+id/banner_view"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="300dp"
+        app:coverWidth="150dp"
         app:delayMillis="2000"
-        app:loop="true"
         app:infinity="true"
-        />
+        app:loop="true" />
 ```
 
 或者在代码中使用：
 
 ```java
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-    bannerView = findViewById(R.id.banner_view);
+BannerView<String> bannerView = findViewById(R.id.banner_view);
 
-    final List<String> data = new ArrayList<>();
-    data.add("Banner0");
-    data.add("Banner1");
-    data.add("Banner2");
-    bannerView.setData(data,new BannerViewHolder(this));
-    bannerView.setNesting(true,20);
-    bannerView.setIndicator(new CirclePageIndicator(data.size()));
-    bannerView.setOnPageClickListener(new BannerView.OnPageClickListener() {
-        @Override
-        public void onPageClick(int position) {
-            String toast = "this is page " + data.get(position);
-            Toast.makeText(MainActivity.this,toast,Toast.LENGTH_SHORT).show();
-        }
-    });
-}
+final List<String> data = new ArrayList<>();
+data.add("Banner0");
+data.add("Banner1");
+data.add("Banner2");
+data.add("Banner3");
+data.add("Banner4");
+bannerView.setData(data, new BannerViewHolder(this));
+bannerView.setIndicator(new CirclePageIndicator(data.size()));
+bannerView.setOnPageClickListener(new BannerView.OnPageClickListener() {
+    @Override
+    public void onPageClick(int position) {
+        String toast = "this is page " + data.get(position);
+        Toast.makeText(MainActivity.this, toast, Toast.LENGTH_SHORT).show();
+    }
+});
 ```
 配合[文档](http://www.riceeater.info/articles/Android/View/BannerView/)食用，风味更佳~

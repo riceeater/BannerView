@@ -3,6 +3,7 @@ package com.xylitolz.androidbannerview;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,7 +13,7 @@ import android.widget.TextView;
  * @desc Banner子项帮助类
  * @date 2018-06-06 14:09
  */
-public class BannerViewHolder implements BaseBannerViewHolder<String>{
+public class BannerViewHolder implements BaseBannerViewHolder<String> {
 
     private Context context;
     private TextView tvBanner;
@@ -22,17 +23,17 @@ public class BannerViewHolder implements BaseBannerViewHolder<String>{
         this.context = context;
     }
 
-    public View createView() {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_banner,null,false);
+    public View createView(ViewGroup parent) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_banner, parent, false);
         tvBanner = view.findViewById(R.id.tv_banner);
         ivBanner = view.findViewById(R.id.iv_banner);
         return view;
     }
 
-    public void bind(int position,String s) {
-        if(position % 3 == 0) {
+    public void bind(int position, String s) {
+        if (position % 3 == 0) {
             ivBanner.setBackgroundColor(0xffff0000);
-        } else if(position % 3 == 1) {
+        } else if (position % 3 == 1) {
             ivBanner.setBackgroundColor(0xff00ff00);
         } else {
             ivBanner.setBackgroundColor(0xff0000ff);

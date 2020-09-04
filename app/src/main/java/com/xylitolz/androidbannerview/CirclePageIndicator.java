@@ -1,8 +1,6 @@
 package com.xylitolz.androidbannerview;
 
-import android.util.SparseArray;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,9 +28,9 @@ public class CirclePageIndicator implements PagerIndicator {
     @Override
     public void setCurrentItem(int position) {
         this.currentItem = position;
-        for(int i = 0;i < imageViewList.size();i++) {
+        for (int i = 0; i < imageViewList.size(); i++) {
             ImageView imageView = imageViewList.get(i);
-            if(i == currentItem) {
+            if (i == currentItem) {
                 imageView.setImageResource(R.drawable.indicator_selected);
             } else {
                 imageView.setImageResource(R.drawable.indicator_normal);
@@ -45,16 +43,16 @@ public class CirclePageIndicator implements PagerIndicator {
         LinearLayout linearLayout = new LinearLayout(viewGroup.getContext());
         linearLayout.setGravity(Gravity.CENTER);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        for(int i = 0;i < size;i++) {
+        for (int i = 0; i < size; i++) {
             ImageView imageView = new ImageView(viewGroup.getContext());
-            if(i == currentItem) {
+            if (i == currentItem) {
                 imageView.setImageResource(R.drawable.indicator_selected);
             } else {
                 imageView.setImageResource(R.drawable.indicator_normal);
             }
             imageViewList.add(imageView);
             linearLayout.addView(imageView);
-            if(i != size - 1) {
+            if (i != size - 1) {
                 ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) imageView.getLayoutParams();
                 marginLayoutParams.rightMargin = BannerView.dpToPx(5);
             }

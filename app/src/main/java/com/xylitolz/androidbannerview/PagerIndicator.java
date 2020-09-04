@@ -1,6 +1,5 @@
 package com.xylitolz.androidbannerview;
 
-import android.view.View;
 import android.view.ViewGroup;
 
 /**
