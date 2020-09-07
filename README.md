@@ -1,7 +1,7 @@
 Android可自动滚动的广告图控件
 效果图：
 ![](
-https://riceeater.oss-cn-qingdao.aliyuncs.com/blog/%E6%97%A0%E9%99%90%E6%BB%9A%E5%8A%A8%E7%9A%84BannerView.gif)
+image/无限滚动的BannerView.gif)
 
 使用：
 
@@ -37,4 +37,4 @@ bannerView.setOnPageClickListener(new BannerView.OnPageClickListener() {
     }
 });
 ```
-配合[文档](http://www.riceeater.info/articles/Android/View/BannerView/)食用，风味更佳~
+配合[文档](https://riceeater.github.io/articles/Android/View/BannerView/)食用，风味更佳~
