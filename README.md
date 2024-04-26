@@ -37,4 +37,4 @@ bannerView.setOnPageClickListener(new BannerView.OnPageClickListener() {
     }
 });
 ```
-配合[文档](https://riceeater.github.io/articles/Android/View/BannerView/)食用，风味更佳~
+配合[文档](https://riceeater.gitee.io/post/28-BannerView)食用，风味更佳~
